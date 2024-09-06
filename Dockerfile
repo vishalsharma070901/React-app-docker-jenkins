@@ -1,14 +1,23 @@
+# Step 1: Use an official Node.js image as the base image
 FROM node:19-alpine
 
+# Step 2: Set the working directory
 WORKDIR /app
 
-COPY package*.json .
+# Step 3: Copy package.json and package-lock.json first to leverage Docker cache
+COPY package*.json /app/
 
-RUN npm install 
+# Step 4: Install dependencies
+RUN npm install
 
-COPY . .
+# Step 5: Copy the rest of the application source code
+COPY . /app/
 
-EXPOSE 5173 
+# Step 6: Build the application
+RUN npm run build
 
- CMD ["npm", "run", "dev"]
+# Step 7: Expose the port
+EXPOSE 5173
 
+# Step 8: Run the application in production mode
+CMD ["npm", "run", "dev"]
